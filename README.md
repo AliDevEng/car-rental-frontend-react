@@ -1,13 +1,13 @@
 # 🚗 Car Rental Frontend
 
-Modern frontend client for the Car Rental Management System, built with **React + Next.js (App Router) + TypeScript + Tailwind CSS**.
+Modern frontend client for the Car Rental Management System, built with **Next.js (App Router) + React + TypeScript + Tailwind CSS**.
 
 ## 📌 Project Info
 
-- Frontend: https://github.com/AliDevEng/car-rental-frontend-react.git
-- Backend API: https://github.com/AliDevEng/car-rental-api-net10.git
-- Backend base URL: `https://localhost:7174`
-- Frontend dev URL: `http://localhost:3000`
+- **Frontend Repo:** https://github.com/AliDevEng/car-rental-frontend-react.git
+- **Backend API Repo:** https://github.com/AliDevEng/car-rental-api-net10.git
+- **Backend Base URL:** `https://localhost:7174`
+- **Local Frontend URL:** `http://localhost:3000`
 
 ---
 
@@ -20,10 +20,11 @@ Modern frontend client for the Car Rental Management System, built with **React 
 - Axios
 - React Hook Form + Zod
 - Lucide React
+- ESLint (Next.js config)
 
 ---
 
-## 📁 Current Structure
+## 📁 Project Structure
 
 ```text
 src/
@@ -47,11 +48,13 @@ src/
 └── assets/
 ```
 
+> `src/pages` is intentionally unused in this App Router setup.
+
 ---
 
 ## ⚙️ Environment Variables
 
-Create `.env`:
+Create `.env` in project root:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://localhost:7174
@@ -68,15 +71,17 @@ Install dependencies:
 npm install
 ```
 
-Start development server:
+Start dev server:
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open: `http://localhost:3000`
 
-Quality and build commands:
+---
+
+## ✅ Quality & Build
 
 ```bash
 npm run type-check
@@ -89,53 +94,32 @@ npm run start
 
 ## 🔌 API Integration
 
-Axios is configured in `src/services/api.ts` using:
+Axios client is configured in:
+
+- `src/services/api.ts`
+
+Using:
 
 ```ts
 process.env.NEXT_PUBLIC_API_BASE_URL;
 ```
 
-Current phase endpoint:
-
-- `GET /categories`
-- `GET /categories/{id}`
+Current implemented endpoints include category retrieval, with additional modules prepared for cars, auth, and booking flows.
 
 ---
 
 ## 🧭 Development Status
 
-- ✅ Iteration 1 (Foundation) completed with Next.js architecture
-- 🔄 Iteration 2 in progress (categories, car browsing, filters)
-- 🔜 Iteration 3–5 (auth, booking, admin)
+- ✅ Iteration 1: Foundation setup complete
+- 🔄 Iteration 2: Categories and car browsing integration
+- 🔜 Next: Authentication, booking workflow, dashboard/admin features
 
-Detailed implementation plan is documented in `frontend-setup-instruction.md`.
-
----
-
-## 🚀 Push to GitHub
-
-If this folder is not a git repo yet:
-
-```bash
-git init
-git add .
-git commit -m "chore: migrate frontend to Next.js app router"
-git branch -M main
-git remote add origin https://github.com/AliDevEng/car-rental-frontend-react.git
-git push -u origin main
-```
-
-If remote `origin` already exists:
-
-```bash
-git remote set-url origin https://github.com/AliDevEng/car-rental-frontend-react.git
-git push -u origin main
-```
+Detailed plan: `frontend-setup-instruction.md`
 
 ---
 
 ## 📝 Notes
 
-- `src/pages` is intentionally unused (App Router project).
-- Keep browser-only logic in client components/hooks (`"use client"`).
-- Restart dev server after changing `.env`.
+- Keep browser-only logic inside client components/hooks using `"use client"`.
+- Restart dev server after `.env` changes.
+- Backend should be running on `https://localhost:7174` during local development.

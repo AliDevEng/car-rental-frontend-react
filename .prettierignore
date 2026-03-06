@@ -1,0 +1,14 @@
+# Build artifacts
+.next
+out
+build
+coverage
+
+# Dependencies and package manager files
+node_modules
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated reports and temp files
+out.txt

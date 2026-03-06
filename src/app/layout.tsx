@@ -7,9 +7,7 @@ export const metadata: Metadata = {
   description: "Car Rental Management System frontend",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body>

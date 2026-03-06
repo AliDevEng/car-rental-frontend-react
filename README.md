@@ -1,6 +1,6 @@
-# 🚗 Car Rental Frontend
+﻿# 🚗 MrRent Frontend
 
-Modern frontend client for the Car Rental Management System, built with **Next.js (App Router) + React + TypeScript + Tailwind CSS**.
+Modern frontend client for the MrRent Management System, built with **Next.js (App Router) + React + TypeScript + Tailwind CSS**.
 
 ## 📌 Project Info
 
@@ -20,6 +20,9 @@ Modern frontend client for the Car Rental Management System, built with **Next.j
 - Axios
 - React Hook Form + Zod
 - Lucide React
+- react-phone-input-2
+- country-list
+- libphonenumber-js
 - ESLint (Next.js config)
 
 ---
@@ -30,6 +33,7 @@ Modern frontend client for the Car Rental Management System, built with **Next.j
 src/
 ├── app/
 │   ├── layout.tsx
+│   ├── providers.tsx
 │   ├── page.tsx
 │   ├── globals.css
 │   ├── cars/page.tsx
@@ -58,7 +62,7 @@ Create `.env` in project root:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://localhost:7174
-NEXT_PUBLIC_APP_NAME=Car Rental System
+NEXT_PUBLIC_APP_NAME=MrRent
 ```
 
 ---
@@ -104,15 +108,16 @@ Using:
 process.env.NEXT_PUBLIC_API_BASE_URL;
 ```
 
-Current implemented endpoints include category retrieval, with additional modules prepared for cars, auth, and booking flows.
+Current implemented endpoints include category retrieval and authentication flows (customer register/login and admin login), with booking and admin modules planned in next iterations.
 
 ---
 
 ## 🧭 Development Status
 
 - ✅ Iteration 1: Foundation setup complete
-- 🔄 Iteration 2: Categories and car browsing integration
-- 🔜 Next: Authentication, booking workflow, dashboard/admin features
+- ✅ Iteration 2: Categories and car browsing integration complete
+- ✅ Iteration 3: Authentication and user context complete
+- 🔄 Next: Iteration 4 booking/cart workflow, then Iteration 5 admin management features
 
 Detailed plan: `frontend-setup-instruction.md`
 
@@ -123,3 +128,4 @@ Detailed plan: `frontend-setup-instruction.md`
 - Keep browser-only logic inside client components/hooks using `"use client"`.
 - Restart dev server after `.env` changes.
 - Backend should be running on `https://localhost:7174` during local development.
+- Public registration is customer-only; admin accounts are backend-managed (seed/manual process).

@@ -1,39 +1,40 @@
-# 🚗 Car Rental Frontend - React + Next.js Setup Instructions
+# 🚗 MrRent Frontend - Setup and Iteration Guide
 
 ## 📋 Project Overview
 
-This document is the **updated implementation guide** for the Car Rental frontend.
+This document tracks the current implementation status of the MrRent frontend.
 
-The project now uses **Next.js (App Router)** instead of Vite + React Router.
-
-- **Project Name:** Car Rental Management System - Frontend Client
-- **Frontend Repository:** https://github.com/AliDevEng/car-rental-frontend-react.git
-- **Backend API:** https://github.com/AliDevEng/car-rental-api-net10.git
+- Project Name: MrRent Management System - Frontend Client
+- Frontend Repository: https://github.com/AliDevEng/car-rental-frontend-react.git
+- Backend API: https://github.com/AliDevEng/car-rental-api-net10.git
+- Frontend Stack: Next.js App Router (not Vite + React Router)
 
 ---
 
 ## 🎯 Current Tech Stack
 
-| Category        | Technology              | Purpose                                 |
-| --------------- | ----------------------- | --------------------------------------- |
-| **Framework**   | Next.js 15 (App Router) | React framework, routing, build/runtime |
-| **UI Library**  | React 19                | Component-based UI                      |
-| **Language**    | TypeScript 5.9+         | Type safety                             |
-| **Styling**     | Tailwind CSS 4          | Utility-first styling                   |
-| **HTTP Client** | Axios                   | API communication                       |
-| **Forms**       | React Hook Form + Zod   | Form handling + validation              |
-| **Icons**       | Lucide React            | UI icons                                |
-| **Linting**     | ESLint (Next config)    | Code quality                            |
+| Category | Technology | Purpose |
+| --- | --- | --- |
+| Framework | Next.js 15 (App Router) | React framework, routing, build/runtime |
+| UI Library | React 19 | Component-based UI |
+| Language | TypeScript 5.9+ | Type safety |
+| Styling | Tailwind CSS 4 | Utility-first styling |
+| HTTP Client | Axios | API communication |
+| Forms | React Hook Form + Zod | Form state + validation |
+| Icons | Lucide React | UI icons |
+| Country/Phone UX | react-phone-input-2 + country-list + libphonenumber-js | Country and phone input handling |
+| Linting | ESLint (Next config) | Code quality |
 
 ---
 
-## 🏗️ Updated Project Structure (Current)
+## 🏗️ Project Structure (Current)
 
 ```text
 CarRental-frontend/
 ├── src/
-│   ├── app/                        # Next.js App Router
+│   ├── app/
 │   │   ├── layout.tsx
+│   │   ├── providers.tsx
 │   │   ├── page.tsx
 │   │   ├── globals.css
 │   │   ├── cars/page.tsx
@@ -42,34 +43,14 @@ CarRental-frontend/
 │   │   ├── dashboard/page.tsx
 │   │   ├── car/[id]/page.tsx
 │   │   └── not-found.tsx
-│   │
-│   ├── views/                      # View components consumed by app routes
-│   │   ├── Home.tsx
-│   │   ├── Cars.tsx
-│   │   ├── CarDetail.tsx
-│   │   ├── Login.tsx
-│   │   ├── Register.tsx
-│   │   ├── Dashboard.tsx
-│   │   └── NotFound.tsx
-│   │
+│   ├── views/
 │   ├── components/
-│   │   ├── ui/
-│   │   ├── layout/
-│   │   └── features/
-│   │
 │   ├── services/
-│   │   ├── api.ts
-│   │   ├── categoriesService.ts
-│   │   ├── carsService.ts
-│   │   ├── authService.ts
-│   │   └── bookingService.ts
-│   │
 │   ├── context/
 │   ├── hooks/
 │   ├── types/
 │   ├── utils/
 │   └── assets/
-│
 ├── next.config.ts
 ├── next-env.d.ts
 ├── postcss.config.js
@@ -80,25 +61,29 @@ CarRental-frontend/
 └── package.json
 ```
 
-> Note: `src/pages` is intentionally unused/empty in this setup.
+Note: `src/pages` is intentionally unused/empty.
 
 ---
 
 ## 🔗 Backend API Integration
 
-### Base Configuration
+### 🌐 Base URLs
 
-- **Backend API Base URL:** `https://localhost:7174`
-- **Frontend Dev URL (Next default):** `http://localhost:3000`
+- Backend API Base URL: `https://localhost:7174`
+- Frontend Dev URL: `http://localhost:3000`
 
-### Available Endpoints (Phase 1)
+### 🔐 Auth Endpoints in Use
 
-```ts
-GET / categories;
-GET / categories / { id };
-```
+- `POST /auth/register` (customer registration)
+- `POST /auth/login` (customer login)
+- `POST /auth/admin/login` (admin login)
 
-### Current Axios Base URL Pattern
+### 📦 Categories Endpoints in Use
+
+- `GET /categories`
+- `GET /categories/{id}`
+
+### ⚙️ Axios Base URL Pattern
 
 The app uses:
 
@@ -106,22 +91,20 @@ The app uses:
 process.env.NEXT_PUBLIC_API_BASE_URL;
 ```
 
-configured in `.env`.
+Configured in `.env`.
 
 ---
 
 ## ⚙️ Environment Variables
 
-Use public Next env names for browser access:
-
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://localhost:7174
-NEXT_PUBLIC_APP_NAME=Car Rental System
+NEXT_PUBLIC_APP_NAME=MrRent
 ```
 
 ---
 
-## ⚙️ Configuration Files (Current)
+## 🛠️ Configuration Reference
 
 ### `next.config.ts`
 
@@ -135,65 +118,22 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-### `postcss.config.js`
+### `src/services/api.ts` (summary)
 
-```js
-module.exports = {
-  plugins: {
-    "@tailwindcss/postcss": {},
-    autoprefixer: {},
-  },
-};
-```
-
-### `tailwind.config.js`
-
-```js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
-  theme: {
-    extend: {
-      colors: {
-        primary: "#3B82F6",
-        secondary: "#10B981",
-        accent: "#F59E0B",
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-      },
-    },
-  },
-  plugins: [],
-};
-```
-
-### `src/services/api.ts` (Axios)
-
-```ts
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-export default api;
-```
+- Adds `Authorization` bearer token from localStorage on requests
+- Handles `401` globally by clearing auth and redirecting to `/login`
 
 ---
 
-## 🚀 Getting Started (Current)
+## 🚀 Getting Started
 
-### 1) Install dependencies
+### 1️⃣ Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2) Run development server
+### 2️⃣ Run development server
 
 ```bash
 npm run dev
@@ -201,7 +141,7 @@ npm run dev
 
 Open: `http://localhost:3000`
 
-### 3) Type check / lint / build
+### 3️⃣ Type check, lint, build
 
 ```bash
 npm run type-check
@@ -209,7 +149,7 @@ npm run lint
 npm run build
 ```
 
-### 4) Run production server
+### 4️⃣ Run production server
 
 ```bash
 npm run start
@@ -217,105 +157,107 @@ npm run start
 
 ---
 
-## 📝 Iteration Plan (Adjusted for Next.js)
+## 📝 Iteration Plan Status
 
-### **ITERATION 1: Foundation (Completed)** ✅
+### ✅ ITERATION 1: Foundation (Completed)
 
 - Next.js app router scaffolded
 - Tailwind 4 configured
-- Base layout (Header/Navbar/Footer/MainLayout)
+- Base layout and routing created
 - Environment variables configured
 - Axios instance configured
-- Core routes available: Home, Cars, Login, Register, Dashboard, CarDetail
 
-### **ITERATION 2: Categories & Car Browsing** ✅
+### ✅ ITERATION 2: Categories and Car Browsing (Completed)
 
-Goal remains the same:
+- Core car/category types and services integrated
+- Category and car browsing views connected to backend
+- Loading and error states implemented
 
-1. Finalize `Car` and `Category` interfaces
-2. Implement `categoriesService`
-3. Build `CategoryCard`, `CarCard`, `CarList`, `FilterSidebar`
-4. Implement `useCategories` + loading/error states
-5. Update `Home` and `Cars` views to consume real API data
-6. Keep responsive/mobile-first behavior
+### ✅ ITERATION 3: Authentication and User Context (Completed)
 
-### **ITERATION 3–5** 🔄
+Implemented:
 
-Auth, booking, and admin iterations remain valid with these adjustments:
+1. Auth types and user typing finalized
+2. `authService` implemented for login/register/logout
+3. `AuthContext` and `useAuth` wired globally via `providers.tsx`
+4. Login/Register forms built with RHF + Zod
+5. JWT integration with localStorage persistence
+6. Protected route logic for dashboard
+7. Header auth state and logout UI
+8. Auth loading/error handling across flows
 
-- Use Next route files in `src/app/...`
-- Use Next navigation (`next/link`, `next/navigation`) instead of React Router APIs
-- Keep client-only logic (`localStorage`, auth context) in client components/hooks
+Additional auth/register details:
 
----
+- Register includes customer profile fields: first name, last name, phone, address, city, postal code, country
+- Country dropdown contains complete country list (`country-list`)
+- Country selection auto-sets default phone prefix (`libphonenumber-js`)
+- Phone prefix remains editable for edge cases (country differs from phone number country)
+- Password rules and live checker:
+  - minimum 6 characters
+  - at least one uppercase letter
+  - at least one number
+- Show/hide password toggles added for password fields
 
-## 🎨 Design System Notes
+Backend compatibility fix:
 
-Current utility classes already match the intended palette and card/button styles:
+- Auth service handles both nested and flat auth response DTOs to avoid false frontend failures when backend returns `201 Created`.
 
-- Primary actions: blue
-- Secondary actions: outlined blue
-- Cards: white + rounded + shadow
+### 🔄 ITERATION 4: Booking and Cart Functionality (Next)
 
-Global styles are now in:
+1. Finalize booking types
+2. Implement booking service
+3. Create `CartContext` and `useCart`
+4. Build booking/cart UX
+5. Integrate booking history into dashboard
 
-- `src/app/globals.css`
+### 🎨 ITERATION 5: Admin and Management Features (Planned)
 
----
-
-## 🔧 Useful Commands
-
-```bash
-# Development
-npm run dev
-
-# Quality
-npm run type-check
-npm run lint
-
-# Production
-npm run build
-npm run start
-```
+1. Add admin-only routes and management UI
+2. Implement car/category CRUD for admins
+3. Add admin dashboard and role-based access checks
 
 ---
 
-## 🐛 Common Issues (Next.js Edition)
+## 🛡️ Security and Access Notes
 
-### 1) CORS / HTTPS backend errors
+- Public frontend registration is customer-only.
+- Admin registration endpoint does not exist by design.
+- Admin accounts must be seeded/created outside public API (backend-controlled).
 
-- Ensure backend is running on `https://localhost:7174`
+---
+
+## 🐛 Common Issues
+
+### 1️⃣ CORS / HTTPS backend errors
+
+- Ensure backend runs on `https://localhost:7174`
 - Ensure backend CORS allows `http://localhost:3000`
-- Verify `.env` contains `NEXT_PUBLIC_API_BASE_URL`
+- Verify `.env` has `NEXT_PUBLIC_API_BASE_URL`
 
-### 2) Env variable not updating
+### 2️⃣ Env variable changes not applied
 
 - Restart Next dev server after editing `.env`
 
-### 3) Browser-only API errors (`localStorage` is undefined)
+### 3️⃣ Browser-only API errors (`localStorage` undefined)
 
-- Ensure the code runs in client context (`"use client"` components/hooks)
-- Guard server-side execution where needed
+- Keep localStorage usage in client components/hooks only
 
-### 4) Tailwind classes not applied
+### 4️⃣ Styling not applied
 
-- Confirm `postcss.config.js` uses `@tailwindcss/postcss`
-- Confirm `tailwind.config.js` content points at `./src/**/*`
-- Restart dev server
+- Confirm Tailwind/PostCSS config files are correct
+- Restart dev server after config changes
 
 ---
 
 ## ✅ Success Criteria (Current)
 
-Frontend is ready when:
+Frontend is considered stable when:
 
-- Categories are fetched and rendered from backend
-- Cars can be browsed with filters
-- Layout is responsive on mobile/tablet/desktop
-- Loading and error states are implemented
+- Categories and cars are rendered from backend
+- Authentication flows work end-to-end for register/login
+- Protected routes redirect correctly for unauthenticated users
+- Register UX supports country + phone requirements
 - No TypeScript or lint errors
 - `npm run build` succeeds
 
----
-
-**Updated for the current Next.js architecture.**
+Updated for current Next.js architecture and current auth implementation.

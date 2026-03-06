@@ -228,7 +228,7 @@ npm run start
 - Axios instance configured
 - Core routes available: Home, Cars, Login, Register, Dashboard, CarDetail
 
-### **ITERATION 2: Categories & Car Browsing** 🔄
+### **ITERATION 2: Categories & Car Browsing** ✅
 
 Goal remains the same:
 
@@ -239,7 +239,7 @@ Goal remains the same:
 5. Update `Home` and `Cars` views to consume real API data
 6. Keep responsive/mobile-first behavior
 
-### **ITERATION 3–5**
+### **ITERATION 3–5** 🔄
 
 Auth, booking, and admin iterations remain valid with these adjustments:
 

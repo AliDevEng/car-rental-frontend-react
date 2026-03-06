@@ -1,6 +1,7 @@
 export interface Car {
   id: number;
   categoryId: number;
+  categoryName: string;
   brand: string;
   model: string;
   year: number;
@@ -10,5 +11,21 @@ export interface Car {
   seats: number;
   price: number;
   status: string;
+  description?: string;
   createdAt: string;
+}
+
+export interface CarFilters {
+  categoryId?: number;
+  fuel?: string;
+  transmission?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  totalCount?: number;
+  page?: number;
+  pageSize?: number;
 }

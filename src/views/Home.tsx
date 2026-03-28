@@ -16,7 +16,10 @@ const Home = () => {
   const [endDate, setEndDate] = useState("");
 
   const sortedCars = useMemo(() => {
-    return [...cars].sort((a, b) => (sort === "price-asc" ? a.price - b.price : b.price - a.price));
+    const safeCars = Array.isArray(cars) ? cars : [];
+    return [...safeCars].sort((a, b) =>
+      sort === "price-asc" ? a.price - b.price : b.price - a.price,
+    );
   }, [cars, sort]);
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {

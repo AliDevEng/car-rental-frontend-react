@@ -21,6 +21,8 @@ export interface CarFilters {
   transmission?: string;
   minPrice?: number;
   maxPrice?: number;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface PaginatedResponse<T> {

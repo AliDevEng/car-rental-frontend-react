@@ -1,30 +1,98 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarDays, Search, Filter } from "lucide-react";
 import CarCard from "@/components/features/CarCard";
 import { useCars } from "@/hooks/useCars";
+import { useAuth } from "@/hooks/useAuth";
+import type { Car } from "@/types/Car";
 
 type SortOption = "price-asc" | "price-desc";
 
+const toUtcDate = (date: string): Date => {
+  const [year, month, day] = date.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day));
+};
+
+const calculateRentalDays = (startDate: string, endDate: string): number => {
+  const diff = toUtcDate(endDate).getTime() - toUtcDate(startDate).getTime();
+  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  return Math.max(days, 1);
+};
+
+const isAvailableStatus = (status: string): boolean => status.toLowerCase() === "available";
+
 const Home = () => {
   const router = useRouter();
-  const { cars, loading, error } = useCars();
+  const { user, token } = useAuth();
+
   const [sort, setSort] = useState<SortOption>("price-asc");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [appliedPeriod, setAppliedPeriod] = useState<{ startDate: string; endDate: string } | null>(
+    null,
+  );
+
+  const { cars, loading, error } = useCars(
+    appliedPeriod ? { startDate: appliedPeriod.startDate, endDate: appliedPeriod.endDate } : undefined,
+  );
+
+  const rentalDays = useMemo(() => {
+    if (!appliedPeriod) return null;
+    return calculateRentalDays(appliedPeriod.startDate, appliedPeriod.endDate);
+  }, [appliedPeriod]);
 
   const sortedCars = useMemo(() => {
     const safeCars = Array.isArray(cars) ? cars : [];
-    return [...safeCars].sort((a, b) =>
+    const periodCars = appliedPeriod ? safeCars.filter((car) => isAvailableStatus(car.status)) : safeCars;
+
+    return [...periodCars].sort((a, b) =>
       sort === "price-asc" ? a.price - b.price : b.price - a.price,
     );
-  }, [cars, sort]);
+  }, [cars, sort, appliedPeriod]);
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/cars");
+    setSearchError(null);
+
+    if (!startDate || !endDate) {
+      setSearchError("Please select both start and end dates to search availability.");
+      return;
+    }
+
+    if (toUtcDate(endDate) < toUtcDate(startDate)) {
+      setSearchError("End date must be the same as or after start date.");
+      return;
+    }
+
+    setAppliedPeriod({ startDate, endDate });
+  };
+
+  const handleBook = (car: Car) => {
+    if (!appliedPeriod) {
+      return;
+    }
+
+    const bookingSearch = new URLSearchParams({
+      startDate: appliedPeriod.startDate,
+      endDate: appliedPeriod.endDate,
+    }).toString();
+
+    const bookingPath = `/car/${car.id}?${bookingSearch}`;
+
+    if (!user || !token) {
+      const loginQuery = new URLSearchParams({
+        message: "Please log in to book a car.",
+        redirect: bookingPath,
+      }).toString();
+
+      router.push(`/login?${loginQuery}`);
+      return;
+    }
+
+    router.push(bookingPath);
   };
 
   return (
@@ -76,6 +144,12 @@ const Home = () => {
               </div>
             </div>
 
+            {searchError && (
+              <p className="mt-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900">
+                {searchError}
+              </p>
+            )}
+
             <button
               type="submit"
               className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-red-700 px-6 py-3 font-semibold text-white transition-colors hover:bg-red-800"
@@ -94,7 +168,9 @@ const Home = () => {
             <h2 className="text-3xl font-extrabold text-gray-900">Available Cars Now</h2>
             <div className="mx-auto mt-2 h-1 w-16 rounded bg-amber-500" />
             <p className="mt-4 text-gray-600">
-              Explore our wide selection of well-maintained vehicles
+              {appliedPeriod
+                ? `Showing cars for ${appliedPeriod.startDate} to ${appliedPeriod.endDate}.`
+                : "Explore our wide selection of well-maintained vehicles"}
             </p>
           </div>
 
@@ -114,8 +190,8 @@ const Home = () => {
                 </select>
               </div>
               <p className="text-sm text-gray-600">
-                Showing{" "}
-                <span className="font-semibold text-amber-600">{sortedCars.length} cars</span>
+                Showing <span className="font-semibold text-amber-600">{sortedCars.length} cars</span>
+                {rentalDays && <span> for {rentalDays} day(s)</span>}
               </p>
             </div>
           )}
@@ -137,7 +213,11 @@ const Home = () => {
           {/* Empty state */}
           {!loading && !error && sortedCars.length === 0 && (
             <div className="rounded-lg bg-gray-50 p-6 text-center">
-              <p className="text-gray-500">No cars available at the moment.</p>
+              <p className="text-gray-500">
+                {appliedPeriod
+                  ? "No cars available for the selected dates."
+                  : "No cars available at the moment."}
+              </p>
             </div>
           )}
 
@@ -145,7 +225,13 @@ const Home = () => {
           {!loading && !error && sortedCars.length > 0 && (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {sortedCars.map((car) => (
-                <CarCard key={car.id} car={car} categoryName={car.categoryName} />
+                <CarCard
+                  key={car.id}
+                  car={car}
+                  categoryName={car.categoryName}
+                  rentalDays={rentalDays ?? undefined}
+                  onBook={appliedPeriod ? () => handleBook(car) : undefined}
+                />
               ))}
             </div>
           )}

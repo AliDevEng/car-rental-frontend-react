@@ -22,6 +22,8 @@ export const useCars = (filters?: CarFilters): UseCarsReturn => {
   const transmission = filters?.transmission;
   const minPrice = filters?.minPrice;
   const maxPrice = filters?.maxPrice;
+  const startDate = filters?.startDate;
+  const endDate = filters?.endDate;
 
   useEffect(() => {
     let cancelled = false;
@@ -36,6 +38,8 @@ export const useCars = (filters?: CarFilters): UseCarsReturn => {
         if (transmission) activeFilters.transmission = transmission;
         if (minPrice !== undefined) activeFilters.minPrice = minPrice;
         if (maxPrice !== undefined) activeFilters.maxPrice = maxPrice;
+        if (startDate) activeFilters.startDate = startDate;
+        if (endDate) activeFilters.endDate = endDate;
 
         const hasFilters = Object.keys(activeFilters).length > 0;
         const data = await carsService.getAll(hasFilters ? activeFilters : undefined);
@@ -54,7 +58,7 @@ export const useCars = (filters?: CarFilters): UseCarsReturn => {
     return () => {
       cancelled = true;
     };
-  }, [categoryId, fuel, transmission, minPrice, maxPrice, refreshKey]);
+  }, [categoryId, fuel, transmission, minPrice, maxPrice, startDate, endDate, refreshKey]);
 
   const refetch = useCallback(() => setRefreshKey((k) => k + 1), []);
 

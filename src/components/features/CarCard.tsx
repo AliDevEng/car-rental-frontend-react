@@ -4,13 +4,19 @@ import Link from "next/link";
 import { Car as CarIcon, Fuel, Users, Settings, Calendar, CheckCircle } from "lucide-react";
 import type { Car } from "@/types/Car";
 import { formatCurrency } from "@/utils/formatters";
+import Button from "@/components/ui/Button";
 
 interface CarCardProps {
   car: Car;
   categoryName?: string;
+  rentalDays?: number;
+  onBook?: () => void;
 }
 
-const CarCard = ({ car, categoryName }: CarCardProps) => {
+const CarCard = ({ car, categoryName, rentalDays, onBook }: CarCardProps) => {
+  const hasPeriod = typeof rentalDays === "number" && rentalDays > 0;
+  const totalPrice = hasPeriod ? car.price * rentalDays : null;
+
   return (
     <Link href={`/car/${car.id}`} className="block group">
       <article className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg">
@@ -70,6 +76,11 @@ const CarCard = ({ car, categoryName }: CarCardProps) => {
               <p className="text-xs font-medium text-amber-600">
                 From {formatCurrency(car.price)} / day
               </p>
+              {hasPeriod && totalPrice !== null && (
+                <p className="mt-1 text-sm font-semibold text-navy">
+                  Total for {rentalDays} day{rentalDays === 1 ? "" : "s"}: {formatCurrency(totalPrice)}
+                </p>
+              )}
             </div>
             <span
               className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium ${
@@ -82,6 +93,23 @@ const CarCard = ({ car, categoryName }: CarCardProps) => {
               {car.status}
             </span>
           </div>
+
+          {onBook && hasPeriod && (
+            <div className="mt-4 border-t border-gray-100 pt-4">
+              <Button
+                type="button"
+                className="w-full"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onBook();
+                }}
+                disabled={car.status !== "Available"}
+              >
+                {car.status === "Available" ? "Book" : "Not Available"}
+              </Button>
+            </div>
+          )}
         </div>
       </article>
     </Link>

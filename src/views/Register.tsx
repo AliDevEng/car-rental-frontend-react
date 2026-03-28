@@ -47,10 +47,10 @@ const registerSchema = z
     email: z.string().email("Enter a valid email"),
     password: z
       .string()
-      .min(6, "Password must be at least 6 characters")
+      .min(8, "Password must be at least 8 characters")
       .regex(/[A-Z]/, "Password must include at least 1 uppercase letter")
       .regex(/\d/, "Password must include at least 1 number"),
-    confirmPassword: z.string().min(6, "Confirm password must be at least 6 characters"),
+    confirmPassword: z.string().trim().min(1, "Confirm password is required"),
     country: z.string().trim().min(1, "Country is required"),
     phone: z
       .string()
@@ -100,7 +100,7 @@ const Register = () => {
   });
   const passwordValue = watch("password") ?? "";
   const passwordChecks = [
-    { label: "Minimum 6 characters", ok: passwordValue.length >= 6 },
+    { label: "Minimum 8 characters", ok: passwordValue.length >= 8 },
     { label: "At least 1 uppercase letter", ok: /[A-Z]/.test(passwordValue) },
     { label: "At least 1 number", ok: /\d/.test(passwordValue) },
   ];
@@ -122,6 +122,7 @@ const Register = () => {
       lastName: values.lastName,
       email: values.email,
       password: values.password,
+      confirmPassword: values.confirmPassword,
       phone: values.phone,
       address: values.address,
       city: values.city,
@@ -135,14 +136,16 @@ const Register = () => {
       return;
     }
 
-    for (const [key, messages] of Object.entries(error.errors)) {
-      const message = messages?.[0];
+    for (const [key, rawMessages] of Object.entries(error.errors)) {
+      const message = Array.isArray(rawMessages) ? rawMessages[0] : rawMessages;
       if (!message) {
         continue;
       }
 
       const normalized = key.toLowerCase();
-      if (normalized.includes("firstname")) {
+      if (normalized.includes("confirmpassword")) {
+        setError("confirmPassword", { type: "server", message });
+      } else if (normalized.includes("firstname")) {
         setError("firstName", { type: "server", message });
       } else if (normalized.includes("lastname")) {
         setError("lastName", { type: "server", message });

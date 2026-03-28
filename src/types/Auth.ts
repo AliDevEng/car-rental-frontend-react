@@ -7,6 +7,7 @@ export interface RegisterPayload {
   lastName: string;
   email: string;
   password: string;
+  confirmPassword: string;
   phone: string;
   address: string;
   city: string;
@@ -27,5 +28,5 @@ export interface AuthResponse {
 export interface AuthError {
   status: number;
   message: string;
-  errors?: Record<string, string[]>;
+  errors?: Record<string, string | string[]>;
 }

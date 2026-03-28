@@ -66,8 +66,8 @@ const Login = () => {
       return;
     }
 
-    for (const [key, messages] of Object.entries(error.errors)) {
-      const message = messages?.[0];
+    for (const [key, rawMessages] of Object.entries(error.errors)) {
+      const message = Array.isArray(rawMessages) ? rawMessages[0] : rawMessages;
       if (!message) {
         continue;
       }

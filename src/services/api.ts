@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const DEFAULT_BASE_URLS = ["https://localhost:7174", "http://localhost:8080"];
+const DEFAULT_BASE_URLS = ["https://localhost:7174"];
 const BASE_URL_STORAGE_KEY = "mrrent:active-api-base-url";
 
 const normalizeBaseUrl = (value: string): string => value.trim().replace(/\/+$/, "");
@@ -23,6 +23,31 @@ const parseBaseUrls = (): string[] => {
 
 const baseUrls = parseBaseUrls();
 let activeBaseUrl = baseUrls[0] ?? DEFAULT_BASE_URLS[0];
+
+const PUBLIC_AUTH_PATHS = new Set([
+  "/auth/register",
+  "/customers/register",
+  "/auth/login",
+  "/auth/admin/login",
+]);
+
+const getRequestPath = (url?: string): string => {
+  if (!url) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(url)) {
+    try {
+      return new URL(url).pathname.toLowerCase();
+    } catch {
+      return "";
+    }
+  }
+
+  return url.split("?")[0]?.toLowerCase() ?? "";
+};
+
+const isPublicAuthRequest = (url?: string): boolean => PUBLIC_AUTH_PATHS.has(getRequestPath(url));
 
 const getSavedBaseUrl = (): string | null => {
   if (typeof window === "undefined") {
@@ -78,14 +103,17 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     config.baseURL = activeBaseUrl;
+    const isAuthRequest = isPublicAuthRequest(config.url);
 
     if (typeof window === "undefined") {
       return config;
     }
 
     const token = localStorage.getItem("token");
-    if (token) {
+    if (token && !isAuthRequest) {
       config.headers.Authorization = `Bearer ${token}`;
+    } else if (isAuthRequest && config.headers?.Authorization) {
+      delete config.headers.Authorization;
     }
 
     return config;
@@ -129,6 +157,11 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 401) {
+      const isAuthRequest = isPublicAuthRequest(requestConfig?.url);
+      if (isAuthRequest) {
+        return Promise.reject(error);
+      }
+
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       window.dispatchEvent(new Event("auth:logout"));

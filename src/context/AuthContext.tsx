@@ -20,7 +20,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const mapAxiosError = (err: unknown, fallbackMessage: string): AuthError => {
-  const error = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+  const error = err as AxiosError<{ message?: string; errors?: Record<string, string | string[]> }>;
   const status = error.response?.status ?? 500;
   const apiMessage = error.response?.data?.message?.trim();
 

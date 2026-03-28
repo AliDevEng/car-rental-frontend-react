@@ -68,7 +68,7 @@ const mapAuthResponse = (
 
 export const authService = {
   async register(payload: RegisterPayload): Promise<AuthResponse> {
-    const res = await api.post<ApiAuthResponse>("/auth/register", payload);
+    const res = await api.post<ApiAuthResponse>("/customers/register", payload);
     return mapAuthResponse(res.data, {
       email: payload.email,
       firstName: payload.firstName,

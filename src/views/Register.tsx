@@ -70,7 +70,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const Register = () => {
   const router = useRouter();
-  const { register: registerUser, loading, error, user } = useAuth();
+  const { register: registerUser, loading, error, user, clearError } = useAuth();
   const [phoneCountryIso2, setPhoneCountryIso2] = useState("se");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -106,12 +106,17 @@ const Register = () => {
   ];
 
   useEffect(() => {
+    clearError();
+  }, [clearError]);
+
+  useEffect(() => {
     if (user) {
       router.replace("/dashboard");
     }
   }, [router, user]);
 
   const onSubmit = async (values: RegisterFormValues) => {
+    clearError();
     await registerUser({
       firstName: values.firstName,
       lastName: values.lastName,
@@ -197,6 +202,24 @@ const Register = () => {
           </div>
 
           <div>
+            <label htmlFor="city" className="mb-1 block text-sm font-medium text-gray-700">
+              City
+            </label>
+            <Input id="city" autoComplete="address-level2" {...register("city")} />
+            {errors.city && <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="postalCode" className="mb-1 block text-sm font-medium text-gray-700">
+              Postal code
+            </label>
+            <Input id="postalCode" autoComplete="postal-code" {...register("postalCode")} />
+            {errors.postalCode && (
+              <p className="mt-1 text-sm text-red-600">{errors.postalCode.message}</p>
+            )}
+          </div>
+
+          <div>
             <label htmlFor="country" className="mb-1 block text-sm font-medium text-gray-700">
               Country
             </label>
@@ -215,7 +238,7 @@ const Register = () => {
                   const dialPrefix = getDialPrefix(countryCode);
                   setPhoneCountryIso2(countryCode.toLowerCase());
                   if (dialPrefix) {
-                    setValue("phone", dialPrefix, { shouldDirty: true, shouldValidate: true });
+                    setValue("phone", dialPrefix, { shouldDirty: true, shouldValidate: false });
                   }
                 },
               })}
@@ -274,24 +297,6 @@ const Register = () => {
               Country sets a default prefix, but you can change phone prefix if needed.
             </p>
             {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>}
-          </div>
-
-          <div>
-            <label htmlFor="city" className="mb-1 block text-sm font-medium text-gray-700">
-              City
-            </label>
-            <Input id="city" autoComplete="address-level2" {...register("city")} />
-            {errors.city && <p className="mt-1 text-sm text-red-600">{errors.city.message}</p>}
-          </div>
-
-          <div>
-            <label htmlFor="postalCode" className="mb-1 block text-sm font-medium text-gray-700">
-              Postal code
-            </label>
-            <Input id="postalCode" autoComplete="postal-code" {...register("postalCode")} />
-            {errors.postalCode && (
-              <p className="mt-1 text-sm text-red-600">{errors.postalCode.message}</p>
-            )}
           </div>
 
           <div>

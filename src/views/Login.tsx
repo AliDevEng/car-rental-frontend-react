@@ -21,7 +21,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 const Login = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login, loading, error, user } = useAuth();
+  const { login, loading, error, user, clearError } = useAuth();
   const redirectPath = searchParams?.get("redirect");
   const loginMessage = searchParams?.get("message");
 
@@ -41,12 +41,17 @@ const Login = () => {
   });
 
   useEffect(() => {
+    clearError();
+  }, [clearError]);
+
+  useEffect(() => {
     if (user) {
       router.replace(safeRedirectPath);
     }
   }, [router, safeRedirectPath, user]);
 
   const onSubmit = async (values: LoginFormValues) => {
+    clearError();
     await login(
       {
         email: values.email,

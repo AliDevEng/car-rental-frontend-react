@@ -11,6 +11,7 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   error: AuthError | null;
+  clearError: () => void;
   login: (payload: LoginPayload, isAdmin?: boolean) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
   logout: () => void;
@@ -20,10 +21,30 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 const mapAxiosError = (err: unknown, fallbackMessage: string): AuthError => {
   const error = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+  const status = error.response?.status ?? 500;
+  const apiMessage = error.response?.data?.message?.trim();
+
+  const resolveMessage = (): string => {
+    if (fallbackMessage === "Login failed") {
+      if (status === 401) {
+        return "Incorrect email or password. Please try again.";
+      }
+
+      if (status === 403) {
+        return "You do not have access with this account.";
+      }
+
+      if (!apiMessage || /^login failed$/i.test(apiMessage)) {
+        return "We couldn't sign you in. Check your credentials and try again.";
+      }
+    }
+
+    return apiMessage || fallbackMessage;
+  };
 
   return {
-    status: error.response?.status ?? 500,
-    message: error.response?.data?.message ?? fallbackMessage,
+    status,
+    message: resolveMessage(),
     errors: error.response?.data?.errors,
   };
 };
@@ -108,8 +129,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     authService.logout();
   }, []);
 
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, error, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, error, clearError, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

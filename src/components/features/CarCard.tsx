@@ -78,7 +78,8 @@ const CarCard = ({ car, categoryName, rentalDays, onBook }: CarCardProps) => {
               </p>
               {hasPeriod && totalPrice !== null && (
                 <p className="mt-1 text-sm font-semibold text-navy">
-                  Total for {rentalDays} day{rentalDays === 1 ? "" : "s"}: {formatCurrency(totalPrice)}
+                  Total for {rentalDays} day{rentalDays === 1 ? "" : "s"}:{" "}
+                  {formatCurrency(totalPrice)}
                 </p>
               )}
             </div>

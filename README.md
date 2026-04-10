@@ -1,62 +1,67 @@
-﻿# 🚗 MrRent Frontend
+# 🚗 NextCar: Fullstack Car Rental & Admin Management System
 
-Modern frontend client for the MrRent Management System, built with **Next.js (App Router) + React + TypeScript + Tailwind CSS**.
+![Next.js](https://img.shields.io/badge/Next.js-16.2.3-000000?logo=next.js)
+![React](https://img.shields.io/badge/React-19.2.5-20232A?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-6.0.2-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.2.2-06B6D4?logo=tailwindcss&logoColor=white)
+![License](https://img.shields.io/badge/License-Private-red)
 
-## 📌 Project Info
+🚘 **Modern Car Rental Platform** | 📊 **Admin Dashboard** | ☕ **Java Spring Boot Backend**
 
-- **Frontend Repo:** https://github.com/AliDevEng/car-rental-frontend-react.git
-- **Backend API Repo:** https://github.com/AliDevEng/car-rental-api-net10.git
-- **Backend API:** `http://localhost:7174`
-- **Local Frontend URL:** `http://localhost:3000`
+Build a complete car rental experience with a polished customer journey, booking flow, and role-based management foundations.
 
----
+## 🌟 Highlights
 
-## 🧰 Tech Stack
+- ⚡ Fast and modern frontend with Next.js App Router
+- 🔐 Authentication flow for customer and admin login
+- 📅 Date-based car availability and booking UX
+- 🧾 Customer dashboard with booking history and profile management
+- 🎨 Responsive and clean Tailwind-based UI
+- 🧠 Type-safe forms and validation with React Hook Form + Zod
 
-- Next.js 15 (App Router)
-- React 19
-- TypeScript 5.9+
-- Tailwind CSS 4
-- Axios
-- React Hook Form + Zod
-- Lucide React
-- react-phone-input-2
-- country-list
-- libphonenumber-js
-- ESLint (Next.js config)
+## 🌐 Project Links
 
----
+- 🔗 Frontend repo: https://github.com/AliDevEng/car-rental-frontend-react.git
+- 🔗 Backend repo: https://github.com/AliDevEng/car-rental-api-net10.git
+- 🖥️ Frontend local URL: `http://localhost:3000`
+- ⚙️ Backend local API: `http://localhost:7174`
 
-## 📁 Project Structure
+## 🧰 Frontend Stack
+
+- ⚡ Next.js (App Router)
+- ⚛️ React
+- 🟦 TypeScript
+- 🎨 Tailwind CSS
+- 🔐 React Hook Form + Zod
+- 🌍 Axios
+- ✅ ESLint + Prettier
+
+## 🛠️ Fullstack Architecture & Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Backend A | ☕ Java 21, Spring Boot 3, Spring Security, JPA/Hibernate |
+| Backend B | 🔷 C# .NET (parallel implementation — same schema) |
+| Frontend | ⚛️ React, Next.js, TypeScript (separate repo) |
+| Database | 🐬 MySQL 8.0 (Docker) |
+| Auth | 🔐 JWT (HMAC-SHA256), BCrypt |
+| Build | 🔧 Maven |
+
+## 🏗️ Project Structure
 
 ```text
 src/
 ├── app/
-│   ├── layout.tsx
-│   ├── providers.tsx
-│   ├── page.tsx
-│   ├── globals.css
-│   ├── cars/page.tsx
-│   ├── login/page.tsx
-│   ├── register/page.tsx
-│   ├── dashboard/page.tsx
-│   ├── car/[id]/page.tsx
-│   └── not-found.tsx
-├── views/
 ├── components/
-├── services/
 ├── context/
 ├── hooks/
+├── services/
 ├── types/
 ├── utils/
-└── assets/
+└── views/
 ```
 
-> `src/pages` is intentionally unused in this App Router setup.
-
----
-
-## ⚙️ Environment Variables
+## 🔐 Environment Variables
 
 Create `.env` in project root:
 
@@ -65,27 +70,14 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:7174
 NEXT_PUBLIC_APP_NAME=MrRent
 ```
 
----
-
 ## ▶️ Run Locally
-
-Install dependencies:
 
 ```bash
 npm install
-```
-
-Start dev server:
-
-```bash
 npm run dev
 ```
 
-Open: `http://localhost:3000`
-
----
-
-## ✅ Quality & Build
+## 🧪 Quality & Build
 
 ```bash
 npm run type-check
@@ -94,28 +86,7 @@ npm run build
 npm run start
 ```
 
----
-
-## 🔌 API Integration
-
-Axios client is configured in:
-
-- `src/services/api.ts`
-
-Using:
-
-```ts
-process.env.NEXT_PUBLIC_API_BASE_URL;
-```
-
-Behavior:
-- Uses a single backend base URL from `NEXT_PUBLIC_API_BASE_URL`.
-- Adds `Authorization` bearer token from `localStorage` on authenticated requests.
-- Handles `401` responses globally by clearing auth state and redirecting to `/login`.
-- Uses `/auth/me` after login so the frontend stores the real authenticated user profile instead of relying on token parsing.
-- Remembers the last successful backend in browser `localStorage`.
-
-Current implemented frontend integrations include:
+## 📡 API Endpoints Integrated
 
 - `POST /customers/register`
 - `POST /auth/login`
@@ -131,77 +102,66 @@ Current implemented frontend integrations include:
 - `GET /rentals/my`
 - `PUT /rentals/{id}/cancel`
 
----
+## 📦 Installed Package Versions
 
-## 🧭 Development Status
+### 🚀 Runtime Dependencies
 
-- ✅ Iteration 1: Foundation setup complete
-- ✅ Iteration 2: Categories and car browsing integration complete
-- ✅ Iteration 3: Authentication and user context complete
-- 🔄 Iteration 4: Booking and customer account workflow partially complete
-- 📋 Next: Complete the remaining booking flow, then Iteration 5 admin management features
+| Package | Version |
+| --- | --- |
+| `@hookform/resolvers` | `5.2.2` |
+| `axios` | `1.15.0` |
+| `country-list` | `2.4.1` |
+| `libphonenumber-js` | `1.12.41` |
+| `lucide-react` | `1.8.0` |
+| `next` | `16.2.3` |
+| `react` | `19.2.5` |
+| `react-dom` | `19.2.5` |
+| `react-hook-form` | `7.72.1` |
+| `react-phone-input-2` | `2.15.1` |
+| `zod` | `4.3.6` |
 
-Detailed plan: `frontend-setup-instruction.md`
+### 🛠️ Dev Dependencies
 
----
+| Package | Version |
+| --- | --- |
+| `@tailwindcss/postcss` | `4.2.2` |
+| `@types/country-list` | `2.1.4` |
+| `@types/node` | `25.6.0` |
+| `@types/react` | `19.2.14` |
+| `@types/react-dom` | `19.2.3` |
+| `autoprefixer` | `10.4.27` |
+| `eslint` | `9.39.4` |
+| `eslint-config-next` | `16.2.3` |
+| `eslint-config-prettier` | `10.1.8` |
+| `eslint-plugin-prettier` | `5.5.5` |
+| `postcss` | `8.5.9` |
+| `prettier` | `3.8.2` |
+| `tailwindcss` | `4.2.2` |
+| `typescript` | `6.0.2` |
+| `typescript-eslint` | `8.58.1` |
 
-## 📝 Notes
+## 🛣️ Roadmap
 
-- Keep browser-only logic inside client components/hooks using `"use client"`.
-- Restart dev server after `.env` changes.
-- Keep the backend running on `http://localhost:7174`.
-- Public registration is customer-only; admin accounts are backend-managed (seed/manual process).
+- ✅ Foundation setup and frontend architecture
+- ✅ Car browsing and category integration
+- ✅ Authentication and user context
+- 🔄 Complete booking creation flow
+- 🔜 Admin management features (role-based routes and CRUD)
 
----
+## 🤝 Contributing
 
-## 📝 Iteration Summary
+Contributions are welcome for UI polish, feature hardening, and performance improvements.
 
-### ✅ Iteration 1: Foundation (Completed)
+1. Fork the repo
+2. Create your feature branch
+3. Commit your changes
+4. Open a pull request
 
-- Next.js App Router structure is in place
-- Tailwind CSS 4 is configured
-- Base layout, routing, and shared providers are wired
-- Axios API client is configured
-- Environment-based backend URL setup is working
+## 💬 Notes
 
-### ✅ Iteration 2: Categories and Car Browsing (Completed)
+- ESLint is pinned to compatible `9.x` because `10.x` currently conflicts with this Next.js lint stack.
+- `useSearchParams()` routes are wrapped in `Suspense` for Next.js 16 prerender requirements.
 
-- Car and category types/services are integrated
-- Homepage car browsing is connected to the backend
-- Date-based availability search is implemented
-- Sorting and filtering UX is implemented for car browsing
-- Loading and error states are handled across car/category views
+## 💙 Support
 
-### ✅ Iteration 3: Authentication and User Context (Completed)
-
-- Customer registration and customer/admin login are implemented
-- `AuthContext` is wired globally via app providers
-- Auth state persists in `localStorage`
-- `/auth/me` is used after login to load the authenticated user profile
-- Register form includes customer profile fields: first name, last name, phone, address, city, postal code, country
-- Country dropdown, phone prefix defaulting, password rules, and password visibility toggles are implemented
-- Protected route logic is in place for dashboard access
-- Header auth state and logout flow are implemented
-
-### 🔄 Iteration 4: Booking and Customer Account Workflow (In Progress)
-
-Implemented so far:
-
-- Customer dashboard/account page is implemented
-- Dashboard includes tabs for profile information and bookings
-- Customer profile can be viewed and updated
-- Booking history view supports upcoming, active, past, and all bookings
-- Future pending bookings can be cancelled according to backend rules
-- Booking status badges use clearer colors for better UX
-- Dashboard includes direct actions to return home and book again
-
-Still remaining in this iteration:
-
-- Complete the actual booking flow from car detail through booking creation
-- Finalize any cart/booking state still planned for the original iteration
-
-### 🎨 Iteration 5: Admin and Management Features (Planned)
-
-- Admin-only routes and management views
-- Car/category CRUD for admins
-- Admin dashboard and role-based management features
+If you like this project, drop a ⭐ on GitHub and share it with fellow devs! 🚀

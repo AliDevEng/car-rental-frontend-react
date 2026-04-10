@@ -14,7 +14,9 @@ export const carsService = {
       return response.data.items;
     }
 
-    throw new Error("Unexpected cars response from API. Check NEXT_PUBLIC_API_BASE_URL and backend response shape.");
+    throw new Error(
+      "Unexpected cars response from API. Check NEXT_PUBLIC_API_BASE_URL and backend response shape.",
+    );
   },
 
   getById: async (id: number): Promise<Car> => {

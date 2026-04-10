@@ -6,7 +6,7 @@ Modern frontend client for the MrRent Management System, built with **Next.js (A
 
 - **Frontend Repo:** https://github.com/AliDevEng/car-rental-frontend-react.git
 - **Backend API Repo:** https://github.com/AliDevEng/car-rental-api-net10.git
-- **Backend APIs:** `.NET` (`https://localhost:7174`) and `Spring` (`http://localhost:8080`)
+- **Backend API:** `https://localhost:7174`
 - **Local Frontend URL:** `http://localhost:3000`
 
 ---
@@ -62,11 +62,8 @@ Create `.env` in project root:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=https://localhost:7174
-NEXT_PUBLIC_API_BASE_URLS=https://localhost:7174,http://localhost:8080
 NEXT_PUBLIC_APP_NAME=MrRent
 ```
-
-`NEXT_PUBLIC_API_BASE_URLS` is optional but recommended. The frontend will try URLs in order and fall back automatically if the first backend is offline.
 
 ---
 
@@ -108,13 +105,12 @@ Axios client is configured in:
 Using:
 
 ```ts
-process.env.NEXT_PUBLIC_API_BASE_URLS;
+process.env.NEXT_PUBLIC_API_BASE_URL;
 ```
 
 Behavior:
-- Supports both single backend (`NEXT_PUBLIC_API_BASE_URL`) and multi-backend (`NEXT_PUBLIC_API_BASE_URLS`).
-- Automatically retries with the next configured URL on network failure.
-- Remembers the last successful backend in browser `localStorage` to speed up later loads.
+- Uses a single backend base URL from `NEXT_PUBLIC_API_BASE_URL`.
+- Remembers the last successful backend in browser `localStorage`.
 
 Current implemented endpoints include category retrieval and authentication flows (customer register/login and admin login), with booking and admin modules planned in next iterations.
 
@@ -135,5 +131,5 @@ Detailed plan: `frontend-setup-instruction.md`
 
 - Keep browser-only logic inside client components/hooks using `"use client"`.
 - Restart dev server after `.env` changes.
-- Keep one backend running at a time (`https://localhost:7174` or `http://localhost:8080`).
+- Keep the backend running on `https://localhost:7174`.
 - Public registration is customer-only; admin accounts are backend-managed (seed/manual process).

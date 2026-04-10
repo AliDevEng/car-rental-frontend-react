@@ -117,18 +117,29 @@ const Register = () => {
 
   const onSubmit = async (values: RegisterFormValues) => {
     clearError();
-    await registerUser({
-      firstName: values.firstName,
-      lastName: values.lastName,
-      email: values.email,
-      password: values.password,
-      confirmPassword: values.confirmPassword,
-      phone: values.phone,
-      address: values.address,
-      city: values.city,
-      postalCode: values.postalCode,
-      country: values.country,
-    });
+    try {
+      const result = await registerUser({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        phone: values.phone,
+        address: values.address,
+        city: values.city,
+        postalCode: values.postalCode,
+        country: values.country,
+      });
+
+      if (result === "created") {
+        const params = new URLSearchParams({
+          message: "Account created successfully. Please log in with your new account.",
+        }).toString();
+        router.push(`/login?${params}`);
+      }
+    } catch {
+      // AuthContext already stores and exposes the error state for the form.
+    }
   };
 
   useEffect(() => {
@@ -377,7 +388,6 @@ const Register = () => {
               {error.message}
             </p>
           )}
-
           <Button type="submit" disabled={loading} className="w-full disabled:cursor-not-allowed">
             {loading ? "Creating account..." : "Register"}
           </Button>

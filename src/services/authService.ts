@@ -1,5 +1,11 @@
 import api from "./api";
-import type { RegisterPayload, LoginPayload, AuthResponse } from "../types/Auth";
+import type {
+  RegisterPayload,
+  LoginPayload,
+  AuthResponse,
+  RegisterResult,
+  AuthenticatedUserResponse,
+} from "../types/Auth";
 import type { User } from "../types/User";
 
 interface ApiAuthUser {
@@ -66,20 +72,54 @@ const mapAuthResponse = (
   };
 };
 
+const mapAuthenticatedUser = (data: AuthenticatedUserResponse): User => ({
+  id: data.id,
+  email: data.email,
+  firstName: data.firstName ?? "",
+  lastName: data.lastName ?? "",
+  role: normalizeRole(data.role),
+});
+
 export const authService = {
-  async register(payload: RegisterPayload): Promise<AuthResponse> {
+  async register(payload: RegisterPayload): Promise<RegisterResult> {
     const res = await api.post<ApiAuthResponse>("/customers/register", payload);
-    return mapAuthResponse(res.data, {
-      email: payload.email,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-    });
+
+    if (res.data.token) {
+      const authenticated = mapAuthResponse(res.data, {
+        email: payload.email,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+      });
+
+      return {
+        token: authenticated.token,
+        user: authenticated.user,
+        requiresLogin: false,
+      };
+    }
+
+    return {
+      token: null,
+      user: null,
+      requiresLogin: true,
+    };
   },
 
   async login(payload: LoginPayload, isAdmin = false): Promise<AuthResponse> {
     const url = isAdmin ? "/auth/admin/login" : "/auth/login";
     const res = await api.post<ApiAuthResponse>(url, payload);
-    return mapAuthResponse(res.data, { email: payload.email });
+    const authResponse = mapAuthResponse(res.data, { email: payload.email });
+
+    const meResponse = await api.get<AuthenticatedUserResponse>("/auth/me", {
+      headers: {
+        Authorization: `Bearer ${authResponse.token}`,
+      },
+    });
+
+    return {
+      token: authResponse.token,
+      user: mapAuthenticatedUser(meResponse.data),
+    };
   },
 
   logout() {

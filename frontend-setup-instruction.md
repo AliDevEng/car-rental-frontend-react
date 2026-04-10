@@ -91,7 +91,7 @@ The app uses:
 process.env.NEXT_PUBLIC_API_BASE_URL;
 ```
 
-Configured in `.env`.
+Configured in `.env` and expected to point to `https://localhost:7174`.
 
 ---
 

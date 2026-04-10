@@ -7,17 +7,11 @@ const BASE_URL_STORAGE_KEY = "mrrent:active-api-base-url";
 const normalizeBaseUrl = (value: string): string => value.trim().replace(/\/+$/, "");
 
 const parseBaseUrls = (): string[] => {
-  const configured =
-    process.env.NEXT_PUBLIC_API_BASE_URLS
-      ?.split(",")
-      .map(normalizeBaseUrl)
-      .filter(Boolean) ?? [];
-
   const single = process.env.NEXT_PUBLIC_API_BASE_URL
     ? [normalizeBaseUrl(process.env.NEXT_PUBLIC_API_BASE_URL)]
     : [];
 
-  const combined = [...configured, ...single, ...DEFAULT_BASE_URLS].filter(Boolean);
+  const combined = [...single, ...DEFAULT_BASE_URLS].filter(Boolean);
   return [...new Set(combined)];
 };
 

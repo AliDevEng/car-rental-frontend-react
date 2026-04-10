@@ -12,17 +12,22 @@ interface AuthContextType {
   loading: boolean;
   error: AuthError | null;
   clearError: () => void;
+  syncUser: (nextUser: User) => void;
   login: (payload: LoginPayload, isAdmin?: boolean) => Promise<void>;
-  register: (payload: RegisterPayload) => Promise<void>;
+  register: (payload: RegisterPayload) => Promise<"authenticated" | "created">;
   logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const mapAxiosError = (err: unknown, fallbackMessage: string): AuthError => {
-  const error = err as AxiosError<{ message?: string; errors?: Record<string, string | string[]> }>;
+  const error = err as AxiosError<{
+    message?: string;
+    error?: string;
+    errors?: Record<string, string | string[]>;
+  }>;
   const status = error.response?.status ?? 500;
-  const apiMessage = error.response?.data?.message?.trim();
+  const apiMessage = error.response?.data?.message?.trim() || error.response?.data?.error?.trim();
 
   const resolveMessage = (): string => {
     if (fallbackMessage === "Login failed") {
@@ -107,16 +112,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setError(null);
     try {
       const res = await authService.register(payload);
-      setToken(res.token);
-      setUser(res.user);
-      if (typeof window !== "undefined") {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("user", JSON.stringify(res.user));
+
+      if (res.token && res.user) {
+        setToken(res.token);
+        setUser(res.user);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("token", res.token);
+          localStorage.setItem("user", JSON.stringify(res.user));
+        }
+
+        return "authenticated" as const;
       }
+
+      setToken(null);
+      setUser(null);
+      return "created" as const;
     } catch (err: unknown) {
       setError(mapAxiosError(err, "Registration failed"));
       setToken(null);
       setUser(null);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -133,8 +148,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setError(null);
   }, []);
 
+  const syncUser = useCallback((nextUser: User) => {
+    setUser(nextUser);
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(nextUser));
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, error, clearError, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, loading, error, clearError, syncUser, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

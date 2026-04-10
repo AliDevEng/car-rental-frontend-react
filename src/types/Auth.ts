@@ -20,9 +20,19 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface AuthenticatedUserResponse extends User {
+  phone?: string | null;
+}
+
 export interface AuthResponse {
   token: string;
   user: User;
+}
+
+export interface RegisterResult {
+  token: string | null;
+  user: User | null;
+  requiresLogin: boolean;
 }
 
 export interface AuthError {

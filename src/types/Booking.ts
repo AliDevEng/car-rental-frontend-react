@@ -8,4 +8,7 @@ export interface Booking {
   bookingNumber: string;
   status: "PENDING" | "ACTIVE" | "COMPLETED" | "CANCELLED";
   totalPrice: number;
+  carBrand?: string;
+  carModel?: string;
+  carRegNr?: string;
 }

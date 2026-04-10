@@ -45,7 +45,8 @@ const normalizeBooking = (rental: ApiRental): Booking => ({
   id: rental.id ?? 0,
   customerId: rental.customerId ?? rental.customer_id ?? 0,
   carId: rental.carId ?? rental.car_id ?? rental.car?.id ?? 0,
-  rentalDate: rental.rentalDate ?? rental.rental_date ?? rental.startDate ?? rental.start_date ?? "",
+  rentalDate:
+    rental.rentalDate ?? rental.rental_date ?? rental.startDate ?? rental.start_date ?? "",
   startDate: rental.startDate ?? rental.start_date ?? "",
   endDate: rental.endDate ?? rental.end_date ?? "",
   bookingNumber: rental.bookingNumber ?? rental.booking_number ?? `BOOK-${rental.id ?? "N/A"}`,

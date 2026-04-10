@@ -5,10 +5,10 @@ import {
   Mail,
   MapPin,
   Clock,
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
+  Globe,
+  MessageCircle,
+  Send,
+  ExternalLink,
 } from "lucide-react";
 
 const Footer = () => {
@@ -28,16 +28,16 @@ const Footer = () => {
             </p>
             <div className="mt-5 flex gap-3">
               <span className="rounded-full bg-white/10 p-2 hover:bg-white/20 transition-colors cursor-pointer">
-                <Facebook className="h-4 w-4" />
+                <Globe className="h-4 w-4" />
               </span>
               <span className="rounded-full bg-white/10 p-2 hover:bg-white/20 transition-colors cursor-pointer">
-                <Instagram className="h-4 w-4" />
+                <MessageCircle className="h-4 w-4" />
               </span>
               <span className="rounded-full bg-white/10 p-2 hover:bg-white/20 transition-colors cursor-pointer">
-                <Twitter className="h-4 w-4" />
+                <Send className="h-4 w-4" />
               </span>
               <span className="rounded-full bg-white/10 p-2 hover:bg-white/20 transition-colors cursor-pointer">
-                <Linkedin className="h-4 w-4" />
+                <ExternalLink className="h-4 w-4" />
               </span>
             </div>
           </div>

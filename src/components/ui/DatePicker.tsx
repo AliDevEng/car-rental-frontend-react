@@ -30,13 +30,21 @@ const parseIsoDate = (value: string): Date | null => {
 const startOfMonth = (date: Date): Date => new Date(date.getFullYear(), date.getMonth(), 1);
 
 const isSameDate = (a: Date, b: Date): boolean =>
-  a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  a.getFullYear() === b.getFullYear() &&
+  a.getMonth() === b.getMonth() &&
+  a.getDate() === b.getDate();
 
 const mondayFirstDayIndex = (day: Date): number => (day.getDay() + 6) % 7;
 
 const isWeekend = (day: Date): boolean => day.getDay() === 0 || day.getDay() === 6;
 
-const DatePicker = ({ label, value, onChange, min, placeholder = "Select date" }: DatePickerProps) => {
+const DatePicker = ({
+  label,
+  value,
+  onChange,
+  min,
+  placeholder = "Select date",
+}: DatePickerProps) => {
   const [open, setOpen] = useState(false);
   const selectedDate = parseIsoDate(value);
   const minDate = parseIsoDate(min ?? "");
@@ -119,7 +127,9 @@ const DatePicker = ({ label, value, onChange, min, placeholder = "Select date" }
           <div className="mb-3 flex items-center justify-between">
             <button
               type="button"
-              onClick={() => setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))}
+              onClick={() =>
+                setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
+              }
               className="rounded-md p-1.5 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
               aria-label="Previous month"
             >
@@ -128,7 +138,9 @@ const DatePicker = ({ label, value, onChange, min, placeholder = "Select date" }
             <p className="text-sm font-semibold text-gray-900">{monthLabel}</p>
             <button
               type="button"
-              onClick={() => setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))}
+              onClick={() =>
+                setCurrentMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))
+              }
               className="rounded-md p-1.5 text-gray-600 transition hover:bg-gray-100 hover:text-gray-900"
               aria-label="Next month"
             >
@@ -163,7 +175,11 @@ const DatePicker = ({ label, value, onChange, min, placeholder = "Select date" }
                   disabled={isDisabled}
                   className={[
                     "h-9 rounded-lg text-sm transition",
-                    inCurrentMonth ? (weekend ? "bg-red-50 text-red-700" : "text-gray-900") : "text-gray-400",
+                    inCurrentMonth
+                      ? weekend
+                        ? "bg-red-50 text-red-700"
+                        : "text-gray-900"
+                      : "text-gray-400",
                     isSelected
                       ? "bg-amber-500 font-semibold text-white hover:bg-amber-500"
                       : weekend

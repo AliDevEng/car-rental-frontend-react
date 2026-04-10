@@ -17,6 +17,7 @@ const loginSchema = z.object({
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormInput = z.input<typeof loginSchema>;
 
 const Login = () => {
   const router = useRouter();
@@ -35,7 +36,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<LoginFormValues>({
+  } = useForm<LoginFormInput, unknown, LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "", isAdmin: false },
   });

@@ -49,11 +49,15 @@ const Home = () => {
   const resultsRef = useRef<HTMLElement | null>(null);
 
   const { cars, loading, error } = useCars(
-    appliedPeriod ? { startDate: appliedPeriod.startDate, endDate: appliedPeriod.endDate } : undefined,
+    appliedPeriod
+      ? { startDate: appliedPeriod.startDate, endDate: appliedPeriod.endDate }
+      : undefined,
   );
 
   const availableCategories = useMemo(
-    () => [...new Set((Array.isArray(cars) ? cars : []).map((car) => car.categoryName).filter(Boolean))],
+    () => [
+      ...new Set((Array.isArray(cars) ? cars : []).map((car) => car.categoryName).filter(Boolean)),
+    ],
     [cars],
   );
   const availableFuels = useMemo(
@@ -61,8 +65,9 @@ const Home = () => {
     [cars],
   );
   const availableTransmissions = useMemo(
-    () =>
-      [...new Set((Array.isArray(cars) ? cars : []).map((car) => car.transmission).filter(Boolean))],
+    () => [
+      ...new Set((Array.isArray(cars) ? cars : []).map((car) => car.transmission).filter(Boolean)),
+    ],
     [cars],
   );
 
@@ -328,7 +333,9 @@ const Home = () => {
                 <div className="flex items-center gap-3">
                   <p className="text-sm text-gray-600">
                     Showing{" "}
-                    <span className="font-semibold text-amber-600">{filteredAndSortedCars.length} cars</span>
+                    <span className="font-semibold text-amber-600">
+                      {filteredAndSortedCars.length} cars
+                    </span>
                     {rentalDays && <span> for {rentalDays} day(s)</span>}
                   </p>
                   {hasActiveFilters && (

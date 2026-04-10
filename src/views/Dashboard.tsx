@@ -16,19 +16,27 @@ import { formatCurrency } from "@/utils/formatters";
 type AccountTab = "profile" | "bookings";
 type BookingFilter = "upcoming" | "active" | "past" | "all";
 
-const PROFILE_FIELDS: Array<{ key: keyof UpdateCustomerPayload; label: string; autoComplete?: string }> =
-  [
-    { key: "firstName", label: "First name", autoComplete: "given-name" },
-    { key: "lastName", label: "Last name", autoComplete: "family-name" },
-    { key: "email", label: "Email", autoComplete: "email" },
-    { key: "phone", label: "Phone", autoComplete: "tel" },
-    { key: "address", label: "Address", autoComplete: "street-address" },
-    { key: "city", label: "City", autoComplete: "address-level2" },
-    { key: "postalCode", label: "Postal code", autoComplete: "postal-code" },
-    { key: "country", label: "Country", autoComplete: "country-name" },
-  ];
+const PROFILE_FIELDS: Array<{
+  key: keyof UpdateCustomerPayload;
+  label: string;
+  autoComplete?: string;
+}> = [
+  { key: "firstName", label: "First name", autoComplete: "given-name" },
+  { key: "lastName", label: "Last name", autoComplete: "family-name" },
+  { key: "email", label: "Email", autoComplete: "email" },
+  { key: "phone", label: "Phone", autoComplete: "tel" },
+  { key: "address", label: "Address", autoComplete: "street-address" },
+  { key: "city", label: "City", autoComplete: "address-level2" },
+  { key: "postalCode", label: "Postal code", autoComplete: "postal-code" },
+  { key: "country", label: "Country", autoComplete: "country-name" },
+];
 
-const emptyProfile = (userId: number, email: string, firstName: string, lastName: string): CustomerProfile => ({
+const emptyProfile = (
+  userId: number,
+  email: string,
+  firstName: string,
+  lastName: string,
+): CustomerProfile => ({
   id: userId,
   email,
   firstName,
@@ -195,7 +203,9 @@ const Dashboard = () => {
           postalCode: fallbackProfile.postalCode,
           country: fallbackProfile.country,
         });
-        setProfileError("We could not load your full profile right now. You can still try saving your details.");
+        setProfileError(
+          "We could not load your full profile right now. You can still try saving your details.",
+        );
       } finally {
         if (isMounted) {
           setLoadingProfile(false);
@@ -327,8 +337,8 @@ const Dashboard = () => {
               Welcome back, {user.firstName || user.email}
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-slate-200 sm:text-base">
-              Manage your profile, follow upcoming rentals, and jump back to the home page when
-              you are ready to book again.
+              Manage your profile, follow upcoming rentals, and jump back to the home page when you
+              are ready to book again.
             </p>
           </div>
 
@@ -413,7 +423,10 @@ const Dashboard = () => {
               <form className="mt-6" onSubmit={handleProfileSave}>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {PROFILE_FIELDS.map((field) => (
-                    <label key={field.key} className={field.key === "address" ? "sm:col-span-2" : ""}>
+                    <label
+                      key={field.key}
+                      className={field.key === "address" ? "sm:col-span-2" : ""}
+                    >
                       <span className="mb-1.5 block text-sm font-medium text-slate-700">
                         {field.label}
                       </span>
@@ -475,12 +488,14 @@ const Dashboard = () => {
               </div>
 
               <div className="mt-6 flex flex-wrap gap-2">
-                {([
-                  ["upcoming", "Upcoming"],
-                  ["active", "Active"],
-                  ["past", "Past"],
-                  ["all", "All"],
-                ] as Array<[BookingFilter, string]>).map(([value, label]) => (
+                {(
+                  [
+                    ["upcoming", "Upcoming"],
+                    ["active", "Active"],
+                    ["past", "Past"],
+                    ["all", "All"],
+                  ] as Array<[BookingFilter, string]>
+                ).map(([value, label]) => (
                   <button
                     key={value}
                     type="button"
@@ -509,7 +524,9 @@ const Dashboard = () => {
                 </div>
               ) : filteredBookings.length === 0 ? (
                 <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-                  <p className="text-lg font-semibold text-slate-800">No bookings in this view yet.</p>
+                  <p className="text-lg font-semibold text-slate-800">
+                    No bookings in this view yet.
+                  </p>
                   <p className="mt-2 text-sm text-slate-600">
                     Head back home to explore available cars and reserve your next trip.
                   </p>
@@ -587,7 +604,9 @@ const Dashboard = () => {
                             disabled={cancellingBookingId === booking.id}
                             className="rounded-full border border-rose-300 px-4 py-2 text-sm font-medium text-rose-700 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
                           >
-                            {cancellingBookingId === booking.id ? "Cancelling..." : "Cancel booking"}
+                            {cancellingBookingId === booking.id
+                              ? "Cancelling..."
+                              : "Cancel booking"}
                           </button>
                         )}
                       </div>
